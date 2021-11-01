@@ -1,8 +1,24 @@
 import sys
-
+import pandas as pd
+from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    """
+    This function takes input of file paths of 2 csv files, containing messages and categories.
+    Then it reads the 2 files in 2 separate dataframes and merges them on a common column before returning it.
+
+    Inputs:
+        1) file path of messages csv file
+        2) file path of categories csv file
+    Output:
+        1) merged dataframe containing both messages and categories
+
+    """
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    # merge datasets
+    df = categories.merge(messages, on='id')
+    return df
 
 
 def clean_data(df):
@@ -10,7 +26,7 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    pass  
+    pass
 
 
 def main():
@@ -24,12 +40,12 @@ def main():
 
         print('Cleaning data...')
         df = clean_data(df)
-        
+
         print('Saving data...\n    DATABASE: {}'.format(database_filepath))
         save_data(df, database_filepath)
-        
+
         print('Cleaned data saved to database!')
-    
+
     else:
         print('Please provide the filepaths of the messages and categories '\
               'datasets as the first and second argument respectively, as '\
