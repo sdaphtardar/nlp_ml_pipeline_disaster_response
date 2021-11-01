@@ -14,15 +14,66 @@ def load_data(messages_filepath, categories_filepath):
         1) merged dataframe containing both messages and categories
 
     """
+    #Load messages data
     messages = pd.read_csv(messages_filepath)
+    #Load categories data
     categories = pd.read_csv(categories_filepath)
-    # merge datasets
+
+    # merge datasets using collon column; id
     df = categories.merge(messages, on='id')
     return df
 
 
 def clean_data(df):
-    pass
+    """
+    This function takes dataframe as input, cleans it and returns it as an output.
+
+    Input:
+        1) dataframe with messy data
+    Output:
+        1) dataframe containing cleaned data
+    """
+
+    #Now we need to split data in categories column in df dataframe, as
+    #performing data analysis on these values will be much easisr if they are
+    #in separate columns
+
+    # create a dataframe of the 36 individual category columns
+    categories = df.categories.str.split(';', expand=True)
+
+    #Next step is to convert this dataframe (categories) in a form where column
+    #names are unique category names and row data signifies presence or absence
+    #of that category.
+
+    # select the first row of the categories dataframe.
+    row = categories[:1]
+    # use this row to extract a list of new column names for categories.
+    category_colnames = (row.apply(lambda x: x.str.slice(0, -2))).values[0].tolist()
+    # rename the columns of `categories` dataframe.
+    categories.columns = category_colnames
+
+    #Data currently contains category names and digit 0 or 1. we do not need
+    #category name in the row as that is redundant.
+
+    #Therefore next lines will remove category names from rows except 1 or 0.
+    categories = categories.apply(lambda x: x.str.slice(-1))
+    #Convert datatype of columns to int
+    categories = categories.astype(int)
+
+    #Next step is to merge this categories dataframe with original dataframe (df)
+
+    #First drop the original categories column from `df`
+    df.drop(columns=['categories'], inplace=True)
+    #Now concatenate the original dataframe with the new `categories` dataframe
+    df = df.merge(categories, left_index=True, right_index=True)
+
+    #Let's remove duplicate rows from the dataframe as they serve no purpose.
+    # drop duplicates
+    df.drop_duplicates(inplace=True)
+
+    return df
+
+
 
 
 def save_data(df, database_filename):
