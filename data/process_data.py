@@ -77,7 +77,16 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
-    pass
+    """
+    This function saves passed dataframe to sqlite database
+    Input:
+        1) dataframe to save.
+        2) database file name where the dataframe should be saved.
+    Output:
+        1) A table is created in the specified database
+    """
+    engine = create_engine(database_filename)
+    df.to_sql('msg_categories', engine, index=False)
 
 
 def main():
