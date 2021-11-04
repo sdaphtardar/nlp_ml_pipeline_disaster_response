@@ -21,7 +21,28 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier
 
 def load_data(database_filepath):
-    pass
+    """
+    This functin loads from specified database file and returns variables needed
+    for Building model
+    Input:
+        1) file name of database file
+    Output:
+        1) X = X variables portion of the dataframe
+        2) Y = Y variables portion of the dataframe
+        3) category_names = names of the categories that will be output to predict
+    """
+    # load data from database
+    engine = create_engine('sqlite:///InsertDatabaseName.db')
+    df = pd.read_sql('SELECT * FROM msg_categories', engine)
+
+    #filter out y columns from total columns
+    y_cols = [col for col in df.columns if col not in ['id','message','original','genre', 'related']]
+
+    X = df['message']
+    y = df[y_cols]
+    category_names = y.columns.values
+
+    return X, y, category_names
 
 
 def tokenize(text):
