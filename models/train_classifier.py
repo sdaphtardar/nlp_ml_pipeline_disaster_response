@@ -105,8 +105,12 @@ def save_model(model, model_filepath):
     """
     This function takes passed model and path and saves it at specified location
     Input:
-        1) model = machine learning model
+        1) model = machine learning model to save
+        2) model_filepath = path where to save the model
+    Output:
+        1) model file saved to specified location
     """
+    pickle.dump(model, open(model_filepath,'wb'))
 
 
 def main():
