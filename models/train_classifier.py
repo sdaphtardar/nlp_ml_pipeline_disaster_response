@@ -22,7 +22,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 def load_data(database_filepath):
     """
-    This functin loads from specified database file and returns variables needed
+    This function loads from specified database file and returns variables needed
     for Building model
     Input:
         1) file name of database file
@@ -46,7 +46,23 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-    pass
+    """
+    This function performs needed processing of the inputtted text data and
+    returns clean tokens
+    Input:
+        1) text = raw text data
+    Output:
+        1) clean_tokens = list containing clean tokens
+    """
+    tokens = word_tokenize(text)
+    lemmatizer = WordNetLemmatizer()
+
+    clean_tokens = []
+    for tok in tokens:
+        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
+        clean_tokens.append(clean_tok)
+
+    return clean_tokens
 
 
 def build_model():
