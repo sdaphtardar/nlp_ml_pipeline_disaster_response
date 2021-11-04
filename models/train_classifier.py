@@ -66,12 +66,40 @@ def tokenize(text):
 
 
 def build_model():
-    pass
+    """
+    This function builds a machine learning pipeline; model Description which
+    gets returned
+    Input:
+        1) None
+    Output:
+        1) model
+    """
+    pipeline = Pipeline ([
+    ('vect', CountVectorizer(tokenizer=tokenize)),
+    ('tfidf', TfidfTransformer()),
+    ('mclf', MultiOutputClassifier(RandomForestClassifier()))
+    ])
+    return pipeline
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
-
+    """
+    This function performs the task of evaluating passed model and outputs
+    f1 score, precision and recall for each output category to stdout.
+    Input:
+        1) model = machine learning model
+        2) X_test = model input data to predict for
+        3) Y_test = output data to check model predictions against
+        4) category_names = categories that will be predicted by the model
+    Output:
+        1) f1_score
+        2) precision
+        3) recalls
+    """
+    predicted = model.predict(X_test)
+    for i in range(len(Y_test.columns)):
+        print('scores for column =',Y_test.columns[i])
+        print(classification_report(Y_test.iloc[i], predicted[i]))
 
 def save_model(model, model_filepath):
     pass
@@ -93,6 +121,10 @@ def main():
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
 
+        print('Improving the model using parameter tuning through aid of GridSearchCV')
+
+
+        
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
         save_model(model, model_filepath)
 
