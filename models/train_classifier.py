@@ -102,7 +102,11 @@ def evaluate_model(model, X_test, Y_test, category_names):
         print(classification_report(Y_test.iloc[i], predicted[i]))
 
 def save_model(model, model_filepath):
-    pass
+    """
+    This function takes passed model and path and saves it at specified location
+    Input:
+        1) model = machine learning model
+    """
 
 
 def main():
@@ -123,8 +127,25 @@ def main():
 
         print('Improving the model using parameter tuning through aid of GridSearchCV')
 
+        #Define parameters to tune
+        parameters = {
+            'vect__max_df': (0.5, 0.75, 1.0),
+            'tfidf__use_idf': (True, False),
+            'tfidf__norm': ('l1', 'l2', None)
+            }
+        #Creating instance of GridSearchCV and pass parameters to tune
+        model = build_model()
+        cv = GridSearchCV(model, param_grid=parameters)
+        print('Training model using GridSearchCV whilst tuning parameters')
+        cv.fit(X_train, Y_train)
 
-        
+        print('Evaluating model...')
+        evaluate_model(cv, X_test, Y_test, category_names)
+
+
+
+
+
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
         save_model(model, model_filepath)
 
