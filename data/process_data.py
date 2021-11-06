@@ -85,7 +85,9 @@ def save_data(df, database_filename):
     Output:
         1) A table is created in the specified database
     """
-    engine = create_engine(database_filename)
+    db_name = 'sqlite:///'+database_filename
+    engine = create_engine(db_name)
+
     df.to_sql('msg_categories', engine, index=False)
 
 

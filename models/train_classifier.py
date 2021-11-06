@@ -32,7 +32,9 @@ def load_data(database_filepath):
         3) category_names = names of the categories that will be output to predict
     """
     # load data from database
-    engine = create_engine('sqlite:///InsertDatabaseName.db')
+    db_name = 'sqlite:///'+database_filepath
+    engine = create_engine(db_name)
+    #engine = create_engine('sqlite:///InsertDatabaseName.db')
     df = pd.read_sql('SELECT * FROM msg_categories', engine)
 
     #filter out y columns from total columns
