@@ -38,7 +38,8 @@ def load_data(database_filepath):
     df = pd.read_sql('SELECT * FROM msg_categories', engine)
 
     #filter out y columns from total columns
-    y_cols = [col for col in df.columns if col not in ['id','message','original','genre', 'related']]
+
+    y_cols = [col for col in df.columns if col not in ['id','message','original','genre']]
 
     X = df['message']
     y = df[y_cols]
@@ -135,13 +136,13 @@ def main():
 
         #Define parameters to tune
         parameters = {
-            'vect__max_df': (0.5, 0.75, 1.0),
+            #'vect__max_df': (0.5, 0.75, 1.0),
             'tfidf__use_idf': (True, False),
-            'tfidf__norm': ('l1', 'l2', None)
+            #'tfidf__norm': ('l1', 'l2', None)
             }
         #Creating instance of GridSearchCV and pass parameters to tune
         model = build_model()
-        cv = GridSearchCV(model, param_grid=parameters)
+        cv = GridSearchCV(model, param_grid=parameters, verbose=3)
         print('Training model using GridSearchCV whilst tuning parameters')
         cv.fit(X_train, Y_train)
 
