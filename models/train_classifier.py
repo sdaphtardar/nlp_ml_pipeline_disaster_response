@@ -154,7 +154,7 @@ def main():
 
 
         print('Saving model...\n    MODEL: {}'.format(model_filepath))
-        save_model(model, model_filepath)
+        save_model(cv, model_filepath)
 
         print('Trained model saved!')
 
