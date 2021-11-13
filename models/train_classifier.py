@@ -77,12 +77,18 @@ def build_model():
     Output:
         1) model
     """
+    #Define parameters to tune
+    parameters = {
+        #'vect__max_df': (0.5, 0.75, 1.0),
+        'tfidf__use_idf': (True, False),
+        #'tfidf__norm': ('l1', 'l2', None)
+        }
     pipeline = Pipeline ([
     ('vect', CountVectorizer(tokenizer=tokenize)),
     ('tfidf', TfidfTransformer()),
     ('mclf', MultiOutputClassifier(RandomForestClassifier()))
     ])
-    return pipeline
+    return parameters, pipeline
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
@@ -124,7 +130,7 @@ def main():
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
         print('Building model...')
-        model = build_model()
+        parameters, model = build_model()
 
         print('Training model...')
         model.fit(X_train, Y_train)
@@ -134,14 +140,9 @@ def main():
 
         print('Improving the model using parameter tuning through aid of GridSearchCV')
 
-        #Define parameters to tune
-        parameters = {
-            #'vect__max_df': (0.5, 0.75, 1.0),
-            'tfidf__use_idf': (True, False),
-            #'tfidf__norm': ('l1', 'l2', None)
-            }
+
         #Creating instance of GridSearchCV and pass parameters to tune
-        model = build_model()
+        parameters, model = build_model()
         cv = GridSearchCV(model, param_grid=parameters, verbose=3)
         print('Training model using GridSearchCV whilst tuning parameters')
         cv.fit(X_train, Y_train)
