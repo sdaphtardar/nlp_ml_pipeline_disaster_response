@@ -67,6 +67,15 @@ def clean_data(df):
     #Now concatenate the original dataframe with the new `categories` dataframe
     df = df.merge(categories, left_index=True, right_index=True)
 
+    #In related column we have 3 unique values. We need to convert it to binary
+    #value counts for each one is
+    #1    19906
+    #0     6122
+    #2      188
+    #Therefore we will drop rows with lowest frequency; which in this case is 2
+
+    df.drop(df[df.related==2].index, inplace=True)
+
     #Let's remove duplicate rows from the dataframe as they serve no purpose.
     # drop duplicates
     df.drop_duplicates(inplace=True)
